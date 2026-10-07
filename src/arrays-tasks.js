@@ -494,7 +494,7 @@ function getHexRGBValues(arr) {
  *   getMaxItems([ 10, 10, 10, 10 ], 3) => [ 10, 10, 10 ]
  */
 function getMaxItems(arr, n) {
-  //TODO
+  return [...arr].sort((a, b) => b - a).slice(0, n);
 }
 
 /**
@@ -509,8 +509,13 @@ function getMaxItems(arr, n) {
  *    findCommonElements(['a', 'b', 'c'], ['b', 'c', 'd']) => [ 'b', 'c' ]
  *    findCommonElements([1, 2, 3], ['a', 'b', 'c']) => []
  */
-function findCommonElements(/* arr1, arr2 */) {
-  throw new Error('Not implemented');
+function findCommonElements(arr1, arr2) {
+  return arr1.reduce((acc, el) => {
+    if (arr2.includes(el)) {
+      acc.push(el);
+    }
+    return acc;
+  }, []);
 }
 
 /**
@@ -524,8 +529,27 @@ function findCommonElements(/* arr1, arr2 */) {
  *    findLongestIncreasingSubsequence([3, 10, 2, 1, 20]) => longest is [3, 10] and [1, 20] => 2
  *    findLongestIncreasingSubsequence([50, 3, 10, 7, 40, 80]) => longest is [7, 40, 80] => 3
  */
-function findLongestIncreasingSubsequence(/* nums */) {
-  throw new Error('Not implemented');
+function findLongestIncreasingSubsequence(nums) {
+  if (nums.length === 0) {
+    return 0;
+  }
+  const result = nums.reduce(
+    (acc, el, i) => {
+      if (el >= nums[i - 1]) {
+        acc.current.push(el);
+      } else {
+        if (acc.current.length > acc.max.length) {
+          acc.max = acc.current;
+        }
+        acc.current = [el];
+      }
+      return acc;
+    },
+    { current: [], max: [] }
+  );
+  return result.current.length > result.max.length
+    ? result.current.length
+    : result.max.length;
 }
 
 /**
@@ -542,8 +566,12 @@ function findLongestIncreasingSubsequence(/* nums */) {
  *  propagateItemsByPositionIndex([ 'a', 'b', 'c', null ]) => [ 'a', 'b', 'b', 'c', 'c', 'c',  null, null, null, null ]
  *  propagateItemsByPositionIndex([ 1,2,3,4,5 ]) => [ 1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 5 ]
  */
-function propagateItemsByPositionIndex(/* arr */) {
-  throw new Error('Not implemented');
+function propagateItemsByPositionIndex(arr) {
+  return arr
+    .map((el, i) => {
+      return Array.from({ length: i + 1 }, () => el);
+    })
+    .flat(Infinity);
 }
 
 /**
@@ -559,8 +587,15 @@ function propagateItemsByPositionIndex(/* arr */) {
  *    shiftArray(['a', 'b', 'c', 'd'], -1) => ['b', 'c', 'd', 'a']
  *    shiftArray([10, 20, 30, 40, 50], -3) => [40, 50, 10, 20, 30]
  */
-function shiftArray(/* arr, n */) {
-  throw new Error('Not implemented');
+function shiftArray(arr, n) {
+  if (n > 0) {
+    arr.unshift(...arr.slice(arr.length - n));
+    arr.splice(arr.length - n);
+  } else {
+    arr.push(...arr.slice(0, Math.abs(n)));
+    arr.splice(0, Math.abs(n));
+  }
+  return arr;
 }
 
 /**
@@ -576,8 +611,48 @@ function shiftArray(/* arr, n */) {
  *   sortDigitNamesByNumericOrder([ 'nine','eight','nine','eight' ]) => [ 'eight','eight','nine','nine']
  *   sortDigitNamesByNumericOrder([ 'one','one','one','zero' ]) => [ 'zero','one','one','one' ]
  */
-function sortDigitNamesByNumericOrder(/* arr */) {
-  throw new Error('Not implemented');
+function sortDigitNamesByNumericOrder(arr) {
+  return arr.sort((astr, bstr) => {
+    const [a, b] = [astr, bstr].map((el) => {
+      let num;
+      switch (el) {
+        case 'zero':
+          num = 0;
+          break;
+        case 'one':
+          num = 1;
+          break;
+        case 'two':
+          num = 2;
+          break;
+        case 'three':
+          num = 3;
+          break;
+        case 'four':
+          num = 4;
+          break;
+        case 'five':
+          num = 5;
+          break;
+        case 'six':
+          num = 6;
+          break;
+        case 'seven':
+          num = 7;
+          break;
+        case 'eight':
+          num = 8;
+          break;
+        case 'nine':
+          num = 9;
+          break;
+        default:
+          break;
+      }
+      return num;
+    });
+    return a - b;
+  });
 }
 
 /**
@@ -599,8 +674,11 @@ function sortDigitNamesByNumericOrder(/* arr */) {
  *   swapHeadAndTail([]) => []
  *
  */
-function swapHeadAndTail(/* arr */) {
-  throw new Error('Not implemented');
+function swapHeadAndTail(arr) {
+  const tailLength = Math.floor(arr.length / 2);
+  const head = arr.splice(0, tailLength);
+  const tail = arr.splice(arr.length - tailLength);
+  return [...tail, ...arr, ...head];
 }
 
 module.exports = {
